@@ -2,7 +2,7 @@
 
 > 基于 koa-generator 生成的项目，修改了一部分结构，添加了session,redis,以及安全性(hemet, rsa)配置
 
-> 示范中的登录加密解密与的前端方面模板搭配请参考 vueAdmin
+> 示范中的登录加密解密与的前端方面模板搭配请参考 [vueAdmin](https://github.com/MrChen2016-08-27/vueAdmn)
 
 * koa2
 * koa-router
@@ -23,7 +23,7 @@
     * rsa.js (node-rsa 加密封装)
 
 > 关于 rsa 加密方式
-    具体参考 tool/rsa.js 前端(请参考 vueAdmin)页面加载时请求 getKey 接口， 生成key存于 session 并返回给前端, 前端通过 JSEncrypt 将key存储，最后登录时将 key 和 密码 加密后给服务端
+    具体参考 tool/rsa.js 前端(请参考 [vueAdmin](https://github.com/MrChen2016-08-27/vueAdmn))页面加载时请求 getKey 接口， 生成key存于 session 并返回给前端, 前端通过 JSEncrypt 将key存储，最后登录时将 key 和 密码 加密后给服务端
 
 
 
