@@ -1,14 +1,13 @@
-const Koa = require('koa')
-const app = new Koa()
+const Koa = require('koa');
+const app = new Koa();
 const onerror = require('koa-onerror');
 const baseMiddleware = require('./middleware/base');
 const routerMiddleware = require('./middleware/router');
 const restMiddleware = require('./middleware/rest');
 const authority = require('./middleware/authority');
 
-
 // error handler
-onerror(app)
+onerror(app);
 
 // middleware
 baseMiddleware(app);

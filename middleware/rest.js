@@ -1,13 +1,8 @@
+const ApiError = require('../config/ApiError');
+
 /**
  * rest 接口的中间件配置
  */
-const errorCode = require('../config/errorCode'); 
-
-/* api错误类 */
-function ApiError(code) {
-    this.code = code || 'internal:unknown_error';
-    this.message = errorCode[code] || '错误';
-}
 
 // rest方法配置
 function restify(app, pathPrefix) {
@@ -29,10 +24,10 @@ function restify(app, pathPrefix) {
             try{
                 await next();
             } catch(e) {
-                console.log(e);
+                console.log(e, '???');
                 ctx.response.type = 'application/json';
                 ctx.response.body = {
-                    meta: new ApiError(e.code)
+                    meta: new ApiError(e.code, e.message)
                 }
             }
         } else {

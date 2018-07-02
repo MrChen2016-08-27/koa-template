@@ -1,34 +1,39 @@
-const views = require('koa-views')
-const json = require('koa-json')
-const onerror = require('koa-onerror')
-const bodyparser = require('koa-bodyparser')
-const logger = require('koa-logger')
-const helmet = require('koa-helmet')
+const views = require('koa-views');
+const json = require('koa-json');
+const onerror = require('koa-onerror');
+const bodyparser = require('koa-bodyparser');
+const logger = require('koa-logger');
+const helmet = require('koa-helmet');
 const session = require('koa-session-redis');
-// const koaJwt = require('koa-jwt');
 const config = require('../config');
+const serve = require('koa-static');
+const path = require('path');
+// 启动时获取第三方 token 并保存 redis
+// require('../tool/token');
+
 
 // 基本中间件
 function base(app) {
     // middlewares
+    app.use(serve(config.resource.context));
     app.use(bodyparser({
         enableTypes:['json', 'form', 'text']
-    }))
-    app.use(json())
-    app.use(logger())
-    app.use(require('koa-static')(__dirname + '/public'))
+    }));
+    app.use(json());
+    app.use(logger());
+    app.use(require('koa-static')(config.resource.public));
 
     app.use(views(__dirname + '/views', {
         extension: 'pug'
-    }))
+    }));
 
     // logger
-    app.use(async (ctx, next) => {
+    app.use(async(ctx, next) => {
         const start = new Date()
         await next()
         const ms = new Date() - start
         console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
-    })
+    });
 
     app.use(helmet());
 
@@ -42,8 +47,6 @@ function base(app) {
         }
     }));
 
-    // jwt-koa
-    // app.use(koaJwt({ secret: config.jwt.secret }).unless({ path: config.jwt.path }));
 }
 
 module.exports = base;

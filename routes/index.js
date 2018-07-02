@@ -1,7 +1,10 @@
-const router = require('koa-router')()
-const user = require('./user');
 
-router.prefix('/api')
+const router = require('koa-router')();
+const user = require('./user');
+const organization = require('./organization');
+const fileupload = require('./fileupload');
+
+router.prefix('/api');
 // router.get('/', async (ctx, next) => {
 //   await ctx.render('index', {
 //     title: 'Hello Koa 2!'
@@ -19,6 +22,22 @@ router.get('/', async (ctx, next) => {
 })
 
 
-router.use(user.routes(), user.allowedMethods());
+router.get('/auth', async (ctx, next) => {
+  ctx.rest({
+    title: '权限验证'
+  });
+})
 
-module.exports = router
+router.get('/logout', async (ctx, next) => {
+  ctx.session.user = null;
+  ctx.rest({
+    title: '注销成功'
+  });
+})
+
+
+router.use(fileupload.routes(), user.allowedMethods());
+router.use(user.routes(), user.allowedMethods());
+router.use(organization.routes(), organization.allowedMethods());
+
+module.exports = router;
