@@ -48,6 +48,11 @@ module.exports = {
     upload: {
         file: 'public/file_dist'
     },
+    https: {
+        key: '',
+        cert: '',
+        port: 443
+    },
     // 资源配置, 路径相对于/middleware
     resource: {
         context: 'xxx',

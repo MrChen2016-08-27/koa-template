@@ -1,6 +1,7 @@
 
 const router = require('koa-router')();
 const user = require('./user');
+const test = require('./test');
 const organization = require('./organization');
 const fileupload = require('./fileupload');
 
@@ -39,5 +40,6 @@ router.get('/logout', async (ctx, next) => {
 router.use(fileupload.routes(), user.allowedMethods());
 router.use(user.routes(), user.allowedMethods());
 router.use(organization.routes(), organization.allowedMethods());
+router.use(test.routes(), test.allowedMethods());
 
 module.exports = router;
