@@ -9,7 +9,9 @@ module.exports = {
     api: {
         baseUrl: '',
         baseUrl2: '',
-        baseUrl3: ''
+        baseUrl3: '',
+        // 支付宝
+        payUrl: 'https://openapi.alipay.com/gateway.do',
     },
     redis: {
         host: '127.0.0.1',
