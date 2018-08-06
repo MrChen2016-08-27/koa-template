@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-const Org = require('../controller/organization');
+const Org = require('../../controller/organization');
 router.prefix('/org');
 
 router.get('/list/get', Org.getOrganizationList);

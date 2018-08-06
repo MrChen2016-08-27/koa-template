@@ -1,6 +1,6 @@
 const router = require('koa-router')();
-const FileUpload = require('../controller/fileUpload.js');
-const getMulterUpload = require('../tool/upload');
+const FileUpload = require('../../controller/fileUpload.js');
+const getMulterUpload = require('../../tool/upload');
 
 router.prefix('/upload');
 

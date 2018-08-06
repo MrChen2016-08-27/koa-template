@@ -3,14 +3,14 @@ const config = require('../config');
 
 module.exports = function(app) {
     app.use(async (ctx, next) => {
-        await apiSessionControl(ctx, next, ctx.request.path);
+        await authSessionControl(ctx, next, ctx.request.path);
     });
     // token
     // app.use(koaJwt({ secret: config.jwt.secret }).unless({ path: config.apiFilter }));
 }
 
 // session验证控制权限
-const apiSessionControl = async (ctx, next, path) => {
+const authSessionControl = async (ctx, next, path) => {
     const { session } = ctx;
     const result = config.apiFilter.find(api => api.test(path));
     if (result) {
@@ -18,7 +18,14 @@ const apiSessionControl = async (ctx, next, path) => {
     } else if (session.user) {
         await next();
     } else {
-        ctx.response.status = 401;
-        ctx.response.body = '没有权限访问';
+        const result = path.substring(0, 5);
+        if (result == '/page'){
+            ctx.redirect('/page/auth');
+        } else {
+            ctx.response.status = 401;
+            ctx.response.body = '没有权限访问';
+        }
     }
 }
+
+

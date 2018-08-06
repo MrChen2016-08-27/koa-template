@@ -23,8 +23,8 @@ function base(app) {
     app.use(logger());
     app.use(require('koa-static')(config.resource.public));
 
-    app.use(views(__dirname + '/views', {
-        extension: 'pug'
+    app.use(views(__dirname + '/../views', {
+        extension: 'ejs'
     }));
 
     // logger

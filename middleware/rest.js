@@ -7,7 +7,7 @@ const ApiError = require('../config/ApiError');
 // rest方法配置
 function restify(app, pathPrefix) {
     // REST API前缀，默认为/api/:
-    pathPrefix = pathPrefix || '/api';
+    pathPrefix = pathPrefix || '/api' || '/page';
     app.use(async (ctx, next) => {
         // 是否是REST API前缀?
         if (ctx.request.path.startsWith(pathPrefix)) {
@@ -24,7 +24,7 @@ function restify(app, pathPrefix) {
             try{
                 await next();
             } catch(e) {
-                console.log(e, '???');
+                console.log(e, '错误信息');
                 ctx.response.type = 'application/json';
                 ctx.response.body = {
                     meta: new ApiError(e.code, e.message)
