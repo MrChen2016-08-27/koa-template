@@ -1,11 +1,11 @@
 const router = require('koa-router')();
 const FileUpload = require('../../controller/fileUpload.js');
-const getMulterUpload = require('../../tool/upload');
+const { getMulterUploadExcel, getMulterUploadImg } = require('../../tool/upload');
 
 router.prefix('/upload');
 
 
-router.post('/file', getMulterUpload().single('file'), FileUpload.uploadFile);
-router.post('/img', FileUpload.uploadImage);
+router.post('/file', getMulterUploadExcel().single('file'), FileUpload.uploadFile);
+router.post('/img', getMulterUploadImg().single('file'), FileUpload.uploadImg);
 
 module.exports = router;

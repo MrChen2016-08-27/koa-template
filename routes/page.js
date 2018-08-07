@@ -3,11 +3,11 @@ const test = require('./page/test');
 
 router.prefix('/page');
 
-// router.get('/', async (ctx, next) => {
-//     await ctx.render('index', {
-//         title: '首页'
-//     });
-// });
+router.get('/', async (ctx, next) => {
+    await ctx.render('index', {
+        title: '首页'
+    });
+});
 
 router.get('/auth', async (ctx, next) => {
     await ctx.render('auth', {

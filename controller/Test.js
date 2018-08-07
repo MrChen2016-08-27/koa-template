@@ -8,6 +8,6 @@ exports.testHttps = async (ctx, next) => {
 
 exports.testPage = async (ctx, next) => {
     await ctx.render('test', {
-        title: 'hello world'
+        title: '测试'
     });
 }

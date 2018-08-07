@@ -39,10 +39,11 @@ module.exports = {
         /^\/api\/user\/list/,
         /^\/api\/user\/add/,
         /^\/page\/auth/,
+        /^\/page/,
         /^\/$/,
     ],
     "file": {
-        "wwww": "/file_dist",
+        "wwww": "file_dist",
         "local": "public/file_dist"
     },
     "image": {
