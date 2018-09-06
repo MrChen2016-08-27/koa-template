@@ -58,7 +58,7 @@ module.exports = {
         cert: '',
         port: 443
     },
-    // 资源配置, 路径相对于/middleware, 建议使用绝对路径
+    // 资源配置, 路径相对于/middleware, 可以使用绝对路径
     resource: {
         context: 'xxx',
         public: 'public',

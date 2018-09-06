@@ -1,0 +1,28 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+a{
+    text-decoration: none;
+    color: #333333;
+}
+body{
+    min-width: 1024px !important;
+    line-height: normal !important;
+    font: 14px "Microsoft YaHei",Arial,Helvetica,sans-serif,"宋体";
+}
+ul, ol{
+    list-style: none;
+    margin-bottom: 0px !important;
+}
+.container-table{
+    display: table;
+    table-layout: fixed;
+}
+.table-cell{
+    display: table-cell;
+}
+.col-float{
+    float: left;
+}

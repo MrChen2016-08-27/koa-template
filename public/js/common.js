@@ -24,7 +24,45 @@ var TableTool = {
         $('#myTable').bootstrapTable("refresh", {url : url});
     }
 };
-
+var ajaxUtil = {
+    // 渲染数据到模板
+    renderTemplate: function renderTemplate(template, data) {
+        var regRule = /\{\{([\w\s\.^\{\{^\}\}]+)\}\}/g;
+        var result = template.replace(regRule, function (value) {
+            var val1 = value.match(/[\w\s.]+/);
+            var attrs = val1[0].split('.');
+            var i = 1;
+            var dataValue = data;
+            for (i; i < attrs.length; i++) {
+                // 消除字段空格
+                var field = attrs[1].replace(/\s/g, "");
+                if (!dataValue[field]) {
+                    dataValue = null;
+                    break;
+                } else {
+                    dataValue = dataValue[field]; 
+                }
+            }
+            return dataValue || '';
+        });
+        return result;
+    },
+    // 将 json 对象变为 get请求参数格式
+    stringifyParams: function stringifyParams(params, isFirst) {
+        var str = '';
+        var index = 0;
+        for (var i in params) {
+            if (isFirst && index == 0) {
+                str += "?" + i + "=" + params[i];
+                index ++;
+            } else {
+                str += "&" + i + "=" + params[i];
+            }
+            console.log(str);
+        }
+        return str;
+    }
+};
 var fileTool = {
     fileUpload: function fileUpload(url, field, oElement, cb, errCb) {
         var fileData = new FormData();
@@ -50,82 +88,7 @@ var fileTool = {
     }
 };
 
-// function errorPlacement(error, element) {
-//     if ($(element.parent()).hasClass('date')) {
-//         error.appendTo(element.parent().parent());
-//     } else {
-//         error.appendTo(element.parent());
-//     }
-// }
 
-// function uploadPics(span, multi) {
-//     var id = span.id + "Upload";
-//     $("#" + id).fileupload({
-//         url: '/upload/image',
-//         dataType: 'json',
-//         autoUpload: true,
-//         acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-//         maxNumberOfFiles: 1,
-//         maxFileSize: 5000000,
-//         sequentialUploads: true,
-//         add: function(e, data) {
-//             var uploadErrors = [];
-//             var acceptFileTypes = /(\.|\/)(gif|jpe?g|png)$/i;
-//             //文件类型判断
-//             if(data.originalFiles[0]['type'].length && !acceptFileTypes.test(data.originalFiles[0]['type'])) {
-//                 uploadErrors.push('不支持文件类型');
-//             }
-//             //文件大小判断
-//             if(data.originalFiles[0]['size'] > 5000000) {
-//                 uploadErrors.push('文件超过5M');
-//             }
-//             if(uploadErrors.length > 0) {
-//                 alert(uploadErrors.join("\n"));
-//             } else {
-//                 data.submit();
-//             }
-//         },
-//         progressall: function (e, data) {
-//             var progress = parseInt(data.loaded / data.total * 100, 10);
-//             $('#progress' + span.id + ' .bar').css(
-//                 'width',
-//                 progress + '%'
-//             );
-//         }
-//     }).bind('fileuploaddone', function (e, data) {
-//         if ($("#" + span.id + "Text").text() === "上传") {
-//             $("#" + span.id + "Text").text("重新上传");
-//             var deleteHtml = '<span class="btn btn-default ml20"  onclick="removePics(this)">删除</span>';
-//             if (multi) {
-//                 $('#'+span.id).after(deleteHtml);
-//                 picsNum += 1;
-//                 addUploadBox(picsNum);
-
-//             }
-//         }
-//         $("#" + span.id + "Img").attr("src", data.result.filePath);
-//     });
-// }
-
-// function addUploadBox(num) {
-//     var html = ' <div class="img-up-item">'
-//         + '<div class="thumbnail">'
-//         + '<img id="pics' + num + 'Img" class="thumb-img" data-holder-rendered="true" >'
-//         + '<div class="caption" align="center">'
-//         + '<span class="btn btn-primary fileinput-button" id="pics' + num + '" onclick="uploadPics(this,true)">'
-//         + '<span id="pics' + num + 'Text" onclick=uploadPics(this,true)>上传</span>'
-//         + '<input type="file" id="pics' + num + 'Upload" name="uploadImage" multiple>'
-//         + '</span>'
-//         + '<div id="progresspics' + num + '">'
-//         + '<div class="bar" style="width: 0%;"></div>'
-//         + '</div>'
-//         + ' </div> </div> </div>';
-//     $('#multiUpload').append(html);
-// }
-
-// function removePics(btn) {
-//     $(btn).parent().parent().remove();
-// }
 
 function datePicker(beginSelector, endSelector) {
     // 仅选择日期
@@ -164,25 +127,7 @@ function datePicker(beginSelector, endSelector) {
     })
 }
 
-function navSearch() {
-    var keyword = $('#navSearchInput').val();
-    if (keyword) {
-        var url = "/search?keyword=" + keyword;
-        window.open(encodeURI(url));
-    }
-}
 
-function applyPrint() {
-    $("#printArea").print({
-        globalStyles: true,
-        stylesheet : null,
-        rejectWindow : true,
-        noPrintSelector : ".no-print",
-        iframe : true,
-        append : null,
-        prepend : null
-    });
-}
 
 // 表单深层结构 name命名格式 xxx-xxx-xxx-...
 function parseFormParams(id) {
@@ -233,21 +178,29 @@ function mappingFormTemplate(id, data) {
     return params;
 }
 
-// var URLTool = {};
-// URLTool.getParam = function (paramName) {
-//     var reg = new RegExp("(^|&)" + paramName + "=([^&]*)(&|$)");
-//     var r = window.location.search.substr(1).match(reg);
-//     if (r != null) return unescape(r[2]); return null;
-// };
+function openUrl(url, link) {
+    if (!link) {
+        window.open(url);
+    } else {
+        window.location.href = url;
+    }
+}
 
+// 超出字符串个数出现省略号, 用于多行文本
+function textOverflow(str, maxLength) {
+    if (str.length <= maxLength) {
+        return str;
+    }
+    console.log(str.length);
+    var text = str.substring(0, maxLength);
+    return text + '...';
+}
 
+// 时间转换
+$(function() {
+    $(".time-format").each(function() {
+        var time = DateTool.formateDate($(this).text());
+        $(this).text(time);
+    });
 
-// function urlParam(name) {
-//     var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-//     if (results == null) {
-//         return null;
-//     }
-//     else {
-//         return results[1] || 0;
-//     }
-// }
+});
