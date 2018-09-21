@@ -55,3 +55,4 @@ exports.getUserList = async (ctx, next) => {
     const res = await userApi.getUserList({ pageNumber, pageSize });
     ctx.rest(res.data);
 }
+

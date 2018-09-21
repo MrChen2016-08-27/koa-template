@@ -11,3 +11,19 @@ exports.testPage = async (ctx, next) => {
         title: '测试'
     });
 }
+
+exports.testRoleList = async (ctx, next) => {
+    const list = [
+        {
+            id: '1',
+            name: '超级管理员',
+        },
+        {
+            id: '2',
+            name: '管理员',
+        },
+    ];
+    ctx.rest({
+        list
+    });
+}
