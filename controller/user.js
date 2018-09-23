@@ -2,6 +2,23 @@
 const config = require('../config');
 const Rsa = require('../tool/rsa');
 const userApi = require('../api/user');
+const { appRouter } = require("./role/menus");
+
+function filterAuthMenus (authObj, list) {
+    let results = [];
+    for (let i in authObj) {
+        let nowObj = list.find(item => item.id == i);
+        if ((typeof authObj[i] == "object") && authObj[i] != null) {
+            nowObj.children = filterAuthMenus(authObj[i], nowObj.children);
+            if (nowObj.children.length > 0) {
+                results.push(nowObj);
+            }
+        } else if (authObj[i] == 1) {
+            results.push(nowObj);
+        }
+    }
+    return results;
+}
 
 exports.addAdmin = async (ctx, next) => {
     var user = {};
@@ -54,5 +71,44 @@ exports.getUserList = async (ctx, next) => {
     const { pageNumber, pageSize } = ctx.request.query;
     const res = await userApi.getUserList({ pageNumber, pageSize });
     ctx.rest(res.data);
+}
+
+exports.getUserSession = async (ctx, next) => {
+    const userInfo = ctx.session.user;
+    // 模拟 userInfo right;
+    const right = {
+        '1': {
+            '1': 1
+        }
+    };
+    let menus = filterAuthMenus(right, appRouter);
+    ctx.rest({
+        ...userInfo,
+        menus
+    });
+};
+
+exports.getRoleList = async (ctx, next) => {
+    const list = [
+        {
+            id: '1',
+            name: '超级管理员',
+        },
+        {
+            id: '2',
+            name: '管理员',
+        },
+    ];
+    ctx.rest({
+        list
+    });
+}
+
+exports.getRoleMenus = async (ctx, next) => {
+    let { id } = ctx.query;
+    ctx.rest({
+        list: appRouter,
+        rights: {}
+    });
 }
 
