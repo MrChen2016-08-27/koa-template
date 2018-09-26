@@ -3,11 +3,13 @@ const config = require('../config');
 const Rsa = require('../tool/rsa');
 const userApi = require('../api/user');
 const { appRouter } = require("./role/menus");
+const _lang = require("lodash/lang");
 
 function filterAuthMenus (authObj, list) {
     let results = [];
     for (let i in authObj) {
         let nowObj = list.find(item => item.id == i);
+        nowObj = _lang.cloneDeep(nowObj);
         if ((typeof authObj[i] == "object") && authObj[i] != null) {
             nowObj.children = filterAuthMenus(authObj[i], nowObj.children);
             if (nowObj.children.length > 0) {
@@ -22,7 +24,7 @@ function filterAuthMenus (authObj, list) {
 
 exports.addAdmin = async (ctx, next) => {
     var user = {};
-    user.username = "admin";
+    user.username = "test";
     user.password = "111111";
     user.orgId = -1;
     user.type = 0;

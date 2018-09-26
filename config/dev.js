@@ -11,7 +11,7 @@ module.exports = {
         baseUrl2: '',
         baseUrl3: '',
         // 支付宝
-        payUrl: 'https://openapi.alipay.com/gateway.do',
+        payUrl: '',
     },
     redis: {
         host: '127.0.0.1',
