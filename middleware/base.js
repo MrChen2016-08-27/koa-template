@@ -6,7 +6,7 @@ const logger = require('koa-logger');
 const helmet = require('koa-helmet');
 const session = require('koa-session-redis');
 const config = require('../config');
-const serve = require('koa-static');
+const staticCache = require('koa-static-cache');
 const path = require('path');
 // 启动时获取第三方 token 并保存 redis
 // require('../tool/token');
@@ -15,13 +15,19 @@ const path = require('path');
 // 基本中间件
 function base(app) {
     // middlewares
-    app.use(serve(config.resource.context));
+    app.use(staticCache(config.resource.context, {
+        preload: true,
+        dynamic: true
+    }));
     app.use(bodyparser({
         enableTypes:['json', 'form', 'text']
     }));
     app.use(json());
     app.use(logger());
-    app.use(require('koa-static')(config.resource.public));
+    app.use(staticCache(config.resource.public, {
+        preload: true,
+        dynamic: true
+    }));
 
     app.use(views(__dirname + '/../views', {
         extension: 'ejs'
